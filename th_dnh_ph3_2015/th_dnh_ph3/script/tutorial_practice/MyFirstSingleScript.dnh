@@ -7,7 +7,7 @@
 #include "script/default_system/Default_ShotConst.txt"
 
 let objBoss;
-
+let objScene = GetEnemyBossSceneObjectID();
 @Event {
     alternative(GetEventType())
     case(EV_REQUEST_LIFE) {
@@ -24,12 +24,11 @@ let objBoss;
 @Initialize {
     objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
     ObjEnemy_Regist(objBoss);
-    let imgExRumia = GetCurrentScriptDirectory() ~ "ExRumia.png";
-    ObjPrim_SetTexture(objBoss, imgExRumia);
-    ObjSprite2D_SetSourceRect(objBoss, 64, 1, 127, 64);
-    ObjSprite2D_SetDestCenter(objBoss);
     ObjMove_SetDestAtFrame(objBoss, GetCenterX(), 60, 60);
 
+    ObjEnemyBossScene_StartSpell(objScene);
+
+    TDrawLoop;
     TFinalize;
     TMainTask;
 }
@@ -41,10 +40,20 @@ let objBoss;
     yield;
 }
 
+task TDrawLoop {
+    let imgExRumia = GetCurrentScriptDirectory() ~ "ExRumia.png";
+    ObjPrim_SetTexture(objBoss, imgExRumia);
+    ObjSprite2D_SetSourceRect(objBoss, 64, 1, 127, 64);
+    ObjSprite2D_SetDestCenter(objBoss);
+}
+
 task TFinalize {
     while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
         yield;
     }
+    if (ObjEnemyBossScene_GetInfo(objScene, INFO_PLAYER_SHOOTDOWN_COUNT) + ObjEnemyBossScene_GetInfo(objScene, INFO_PLAYER_SPELL_COUNT) == 0) {
+        AddScore(ObjEnemyBossScene_GetInfo(objScene, INFO_SPELL_SCORE));
+        }
     Obj_Delete(objBoss);
     DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
     SetAutoDeleteObject(true);
@@ -52,10 +61,19 @@ task TFinalize {
 }
 
 task TMainTask {
+    wait(120);
+    movement;
     while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
         let angleT = GetAngleToPlayer(objBoss);
         CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 2, angleT, DS_BALL_S_RED, 5);
         wait(30);
+    }
+}
+
+task movement {
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+        ObjMove_SetDestAtFrame(objBoss, rand(GetCenterX() + 90, GetCenterX() - 90), rand(GetCenterY() - 60, GetCenterY() - 120), 60);
+        wait(240);
     }
 }
 
