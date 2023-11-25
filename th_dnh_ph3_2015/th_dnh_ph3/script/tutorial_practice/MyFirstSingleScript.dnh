@@ -63,11 +63,8 @@ task TFinalize {
 task TMainTask {
     wait(120);
     movement;
-    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
-        let angleT = GetAngleToPlayer(objBoss);
-        CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 2, angleT, DS_BALL_S_RED, 5);
-        wait(30);
-    }
+    fireA;
+    fireB;
 }
 
 task movement {
@@ -75,6 +72,31 @@ task movement {
         ObjMove_SetDestAtFrame(objBoss, rand(GetCenterX() + 90, GetCenterX() - 90), rand(GetCenterY() - 60, GetCenterY() - 120), 60);
         wait(240);
     }
+}
+
+task fireA {
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+        let angleT = GetAngleToPlayer(objBoss);
+        loop(13) {
+            ascent(i in 0..3) {
+                CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 2.5 - i/3, angleT, DS_BALL_S_RED + i, 5);
+            }
+            angleT += 360/13;
+        }
+        wait(30);
+    }
+}
+
+task fireB {
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+        let angleT = GetAngleToPlayer(objBoss);
+        ascent(i in -1..2) {
+            ascent(j in 0..6) {
+                CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 4 - j/3, angleT + i*20, DS_RICE_M_SKY, 5);
+            }
+        }
+        wait(120);
+    }   
 }
 
 function GetCenterX() {
