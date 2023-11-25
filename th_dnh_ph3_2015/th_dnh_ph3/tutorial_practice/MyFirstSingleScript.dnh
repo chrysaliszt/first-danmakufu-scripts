@@ -1,0 +1,45 @@
+#TouhouDanmakufu[Single]
+#ScriptVersion[3]
+#Title["My First Danmakufu Single Script!"]
+#Text["Code by CHY[r]My First Bullet!"]
+
+@Event {
+    alternative(GetEventType())
+    case(EV_REQUEST_LIFE) {
+        SetScriptResult(500);
+    }
+    case(EV_REQUEST_TIMER) {
+        SetScriptResult(60);
+    }
+    case(EV_REQUEST_SPELL_SCORE) {
+        SetScriptResult(1000000);
+    }
+}
+
+@Initialize {
+    objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
+    ObjEnemy_Regist(objBoss);
+    let imgExRumia = GetCurrentScriptDirectory() ~ "ExRumia.png";
+    ObjPrim_SetTexture(objBoss, imgExRumia);
+    ObjSprite2D_SetSourceRect(objBoss, 64, 1, 127, 64);
+    ObjSprite2D_SetDestCenter(objBoss);
+    ObjMove_SetDestAtFrame(objBoss, GetCenterX(), 60, 60);
+}
+
+@MainLoop {
+
+}
+
+function GetCenterX() {
+    return GetStgFrameWidth() / 2;
+}
+
+function GetCenterY() {
+    return GetStgFrameHeight() / 2;
+}
+
+function wait(frames) {
+    loop(frames) [
+        yield;
+    ]
+}
