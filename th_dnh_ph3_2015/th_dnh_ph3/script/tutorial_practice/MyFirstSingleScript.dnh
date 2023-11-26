@@ -78,12 +78,12 @@ task fireA {
     while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
         let angleT = GetAngleToPlayer(objBoss);
         loop(13) {
-            ascent(i in 0..3) {
-                CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 2.5 - i/3, angleT, DS_BALL_S_RED + i, 5);
+            ascent(i in 0..8) {
+                CreateShotA2(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 0, angleT, 0.01 * (i+1), 20, DS_BALL_S_RED + i, 5);
             }
             angleT += 360/13;
         }
-        wait(30);
+        wait(60);
     }
 }
 
