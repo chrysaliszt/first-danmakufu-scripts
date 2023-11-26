@@ -8,6 +8,7 @@
 
 let objBoss;
 let objScene = GetEnemyBossSceneObjectID();
+
 @Event {
     alternative(GetEventType())
     case(EV_REQUEST_LIFE) {
@@ -53,7 +54,7 @@ task TFinalize {
     }
     if (ObjEnemyBossScene_GetInfo(objScene, INFO_PLAYER_SHOOTDOWN_COUNT) + ObjEnemyBossScene_GetInfo(objScene, INFO_PLAYER_SPELL_COUNT) == 0) {
         AddScore(ObjEnemyBossScene_GetInfo(objScene, INFO_SPELL_SCORE));
-        }
+    }
     Obj_Delete(objBoss);
     DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
     SetAutoDeleteObject(true);
