@@ -1,0 +1,136 @@
+#TouhouDanmakufu[Single]
+#ScriptVersion[3]
+#Title["Laser Test"]
+#Text["Code by CHY"]
+
+#include "script/default_system/Default_ShotConst.txt"
+
+let objBoss;
+let objScene = GetEnemyBossSceneObjectID();
+
+@Event {
+	alternative(GetEventType())
+    case(EV_REQUEST_LIFE) {
+        SetScriptResult(500);
+    }
+    case(EV_REQUEST_TIMER) {
+        SetScriptResult(60);
+    }
+    case(EV_REQUEST_SPELL_SCORE) {
+        SetScriptResult(1000000);
+    }
+}
+
+@Initialize {
+	objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
+    ObjEnemy_Regist(objBoss);
+    ObjMove_SetDestAtFrame(objBoss, GetStgFrameWidth() / 2, 60, 60);
+
+    ObjEnemyBossScene_StartSpell(objScene);
+
+	TDrawLoop;
+    TFinalize;
+    TMainTask;
+}
+
+@MainLoop {
+	ObjEnemy_SetIntersectionCircleToShot(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 32);
+    ObjEnemy_SetIntersectionCircleToPlayer(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 24);
+
+    yield;
+}
+
+task TDrawLoop {
+    let imgExRumia = GetCurrentScriptDirectory() ~ "ExRumia.png";
+    ObjPrim_SetTexture(objBoss, imgExRumia);
+    ObjSprite2D_SetSourceRect(objBoss, 64, 1, 127, 64);
+    ObjSprite2D_SetDestCenter(objBoss);
+}
+
+task TFinalize {
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+        yield;
+    }
+    if (ObjEnemyBossScene_GetInfo(objScene, INFO_PLAYER_SHOOTDOWN_COUNT) + ObjEnemyBossScene_GetInfo(objScene, INFO_PLAYER_SPELL_COUNT) == 0) {
+        AddScore(ObjEnemyBossScene_GetInfo(objScene, INFO_SPELL_SCORE));
+    }
+    Obj_Delete(objBoss);
+    DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
+    SetAutoDeleteObject(true);
+    CloseScript(GetOwnScriptID());
+}
+
+task TMainTask {
+	wait(120);
+	movement;
+	fireA;
+	fireB;
+}
+
+// Movement pattern: the boss moves within a small range around the current position, bounded by a max and min limit.
+task movement {
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+		let bossX = ObjMove_GetX(objBoss);
+		let bossY = ObjMove_GetY(objBoss);
+
+		let width = GetStgFrameWidth();
+		let height = GetStgFrameHeight();
+
+		let bossXMaxLimit = width * 0.95;
+		let bossXMinLimit = width * 0.05;
+
+		let bossYMaxLimit = height * 0.3;
+		let bossYMinLimit = height * 0.1;
+
+        ObjMove_SetDestAtFrame(objBoss, 
+			rand(max(bossXMinLimit, bossX - width * 0.4), min(bossXMaxLimit, bossX + width * 0.4)), 
+			rand(max(bossYMinLimit, bossY - height * 0.15), min(bossYMaxLimit, bossY + height * 0.15)), 
+			60
+		);
+
+		wait(180);
+    }
+}
+
+// Bullet pattern: shoots a ring of loose lasers aimed around the player.
+task fireA {
+	while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+		let angleT = GetAngleToPlayer(objBoss) + 360/13/2;
+        loop(13) {
+            CreateLooseLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 4, angleT, 175, 12, DS_SCALE_GREEN, 20);
+            angleT += 360/13;
+        }
+        wait(60);
+	}
+}
+
+// Bullet pattern: shoot a straight laser aimed at the player. After becoming active, it will slowly rotate towards the player until it disappears.
+task fireB {
+	while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+		let angleT = GetAngleToPlayer(objBoss);
+		let obj = CreateStraightLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), angleT, GetStgFrameHeight() * 1.5, 20, 65, DS_BEAM_RAINBOW, 55);
+		wait(60);
+		if (GetAngleToPlayer(obj) > angleT) {
+			angleT = 10;
+		}
+		else {
+			angleT = -10;
+		}
+		rotateStraightLaser(obj, angleT, 60);
+	}
+}
+
+task rotateStraightLaser(objID, angle, frames) {
+	let currentAngle = ObjStLaser_GetAngle(objID);
+	loop(frames) {
+		currentAngle += angle/frames;
+		ObjStLaser_SetAngle(objID, currentAngle);
+		yield;
+	}
+}
+
+function wait(frames) {
+	loop(frames) {
+		yield;
+	}
+}
