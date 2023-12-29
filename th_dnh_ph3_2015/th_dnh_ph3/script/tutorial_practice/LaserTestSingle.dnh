@@ -65,6 +65,7 @@ task TMainTask {
 	movement;
 	fireA;
 	fireB;
+	fireC;
 }
 
 // Movement pattern: the boss moves within a small range around the current position, bounded by a max and min limit.
@@ -108,7 +109,7 @@ task fireA {
 task fireB {
 	while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
 		let angleT = GetAngleToPlayer(objBoss);
-		let obj = CreateStraightLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), angleT, GetStgFrameHeight() * 1.5, 20, 65, DS_BEAM_RAINBOW, 55);
+		let obj = CreateStraightLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), angleT, GetStgFrameHeight() * 1.5, 20, 80, DS_BEAM_RAINBOW, 55);
 		wait(60);
 		if (GetAngleToPlayer(obj) > angleT) {
 			angleT = 10;
@@ -116,7 +117,23 @@ task fireB {
 		else {
 			angleT = -10;
 		}
-		rotateStraightLaser(obj, angleT, 60);
+		rotateStraightLaser(obj, angleT, 80);
+		wait(60);
+	}
+}
+
+task fireC {
+	while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+		let angleT = GetAngleToPlayer(objBoss) - 30;
+		ascent(i in 0..2) {
+			let objLaser = CreateCurveLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 6, angleT, 60, 18, DS_MISSILE_SKY, 10);
+			ObjCrLaser_SetTipDecrement(objLaser, 0);
+			ObjLaser_SetInvalidLength(objLaser, 10, 10);
+			ObjMove_AddPatternA2(objLaser, 30, NO_CHANGE, NO_CHANGE, 0, 1.5 * (-2*i + 1), NO_CHANGE);
+			ObjMove_AddPatternA2(objLaser, 70, NO_CHANGE, NO_CHANGE, 0, 0, NO_CHANGE);
+			angleT += 60;
+		}
+		wait(55);
 	}
 }
 
