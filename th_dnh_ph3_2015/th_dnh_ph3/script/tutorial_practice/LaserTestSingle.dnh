@@ -99,6 +99,7 @@ task fireA {
 		let angleT = GetAngleToPlayer(objBoss) + 360/13/2;
 		loop(13) {
             slowLooseLaser(angleT);
+			DelayLaser(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), angleT, GetStgFrameHeight() * 1.5, 200, 0, DS_BEAM_GREEN, 140);
             angleT += 360/13;
         }
         wait(60);
@@ -135,6 +136,34 @@ task fireC {
 	}
 }
 
+task slowLooseLaser(angle) {
+	let laser = CreateLooseLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 1, angle, 14, 12, DS_SCALE_GREEN, 20);
+	ObjRender_SetBlendType(laser, BLEND_INV_DESTRGB);
+	wait(140);
+	ObjMove_SetSpeed(laser, 8);
+	ObjLaser_SetLength(laser, 175);
+}
+
+task DelayLaser(x, y, ang, l, w, dt, graphic, delay) { 
+    let objLaser = CreateStraightLaserA1(x, y, ang, l, w, dt, graphic, delay);
+    ObjStLaser_SetSource(objLaser, false);
+	let alpha = 0;
+	ObjRender_SetAlpha(objLaser, alpha);
+	wait(20);
+    loop(delay-1 - 20){ //So that the graphic never enlarges. 
+        if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){
+            Obj_Delete(objLaser); 
+            return;
+        }
+		ObjMove_SetX(objLaser, ObjMove_GetX(objLaser) + 1 * cos(ang));
+		ObjMove_SetY(objLaser, ObjMove_GetY(objLaser) + 1 * sin(ang));
+		alpha += 0.5;
+		ObjRender_SetAlpha(objLaser, alpha);
+        yield;
+    }
+    Obj_Delete(objLaser);
+}
+
 task rotateStraightLaser(objID, angle, frames) {
 	let currentAngle = ObjStLaser_GetAngle(objID);
 	loop(frames) {
@@ -142,14 +171,6 @@ task rotateStraightLaser(objID, angle, frames) {
 		ObjStLaser_SetAngle(objID, currentAngle);
 		yield;
 	}
-}
-
-task slowLooseLaser(angle) {
-	let laser = CreateLooseLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 1, angle, 14, 12, DS_SCALE_GREEN, 20);
-	ObjRender_SetBlendType(laser, BLEND_INV_DESTRGB);
-	wait(140);
-	ObjMove_SetSpeed(laser, 8);
-	ObjLaser_SetLength(laser, 175);
 }
 
 task SnakePattern(obj, wvel) {
