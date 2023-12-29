@@ -128,9 +128,7 @@ task fireC {
 		ascent(i in 0..2) {
 			let objLaser = CreateCurveLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 6, angleT, 60, 18, DS_MISSILE_SKY, 10);
 			ObjCrLaser_SetTipDecrement(objLaser, 0);
-			ObjLaser_SetInvalidLength(objLaser, 10, 10);
-			ObjMove_AddPatternA2(objLaser, 30, NO_CHANGE, NO_CHANGE, 0, 1.5 * (-2*i + 1), NO_CHANGE);
-			ObjMove_AddPatternA2(objLaser, 70, NO_CHANGE, NO_CHANGE, 0, 0, NO_CHANGE);
+			SnakePattern(objLaser, 2 * (1 - 2*i));
 			angleT += 60;
 		}
 		wait(55);
@@ -152,6 +150,13 @@ task slowLooseLaser(angle) {
 	wait(140);
 	ObjMove_SetSpeed(laser, 8);
 	ObjLaser_SetLength(laser, 175);
+}
+
+task SnakePattern(obj, wvel) {
+	ascent(i in 1..12){
+	    ObjMove_AddPatternA2(obj, i * 30, NO_CHANGE, NO_CHANGE, 0, wvel, NO_CHANGE);
+	    wvel *= -1;
+	}
 }
 
 function wait(frames) {
