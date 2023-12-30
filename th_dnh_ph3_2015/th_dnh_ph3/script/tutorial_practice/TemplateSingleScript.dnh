@@ -2,12 +2,17 @@
 #ScriptVersion[3]
 #Title[""]
 #Text[""]
-
+//----------------------------------------------------
+// INCLUDE SHOTSHEET HERE
+//----------------------------------------------------
 #include "script/default_system/Default_ShotConst.txt"
 
 let objBoss;
 let objScene = GetEnemyBossSceneObjectID();
 
+//----------------------------------------------------
+// CHANGE BOSS HEALTH, TIME, AND SPELL BONUS HERE
+//----------------------------------------------------
 @Event {
 	alternative(GetEventType())
     case(EV_REQUEST_LIFE) {
@@ -24,6 +29,9 @@ let objScene = GetEnemyBossSceneObjectID();
 @Initialize {
 	objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
     ObjEnemy_Regist(objBoss);
+//----------------------------------------------------
+// CHANGE INITIAL BOSS POSITION HERE
+//----------------------------------------------------
     ObjMove_SetDestAtFrame(objBoss, GetStgFrameWidth() / 2, 60, 60);
 
     ObjEnemyBossScene_StartSpell(objScene);
@@ -34,6 +42,9 @@ let objScene = GetEnemyBossSceneObjectID();
 }
 
 @MainLoop {
+//----------------------------------------------------
+// CHANGE BOSS HITBOXES HERE
+//----------------------------------------------------
 	ObjEnemy_SetIntersectionCircleToShot(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 32);
     ObjEnemy_SetIntersectionCircleToPlayer(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 24);
 
@@ -41,6 +52,9 @@ let objScene = GetEnemyBossSceneObjectID();
 }
 
 task TDrawLoop {
+//----------------------------------------------------
+// CHANGE BOSS SPRITE AND ANIMATION HERE
+//----------------------------------------------------
     let imgExRumia = GetCurrentScriptDirectory() ~ "ExRumia.png";
     ObjPrim_SetTexture(objBoss, imgExRumia);
     ObjSprite2D_SetSourceRect(objBoss, 64, 1, 127, 64);
@@ -61,7 +75,9 @@ task TFinalize {
 }
 
 task TMainTask {
-	
+//----------------------------------------------------
+// ADD MAIN TASKS HERE
+//----------------------------------------------------
 }
 
 function wait(frames) {
