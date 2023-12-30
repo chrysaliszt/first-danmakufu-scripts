@@ -1,0 +1,95 @@
+#TouhouDanmakufu[Single]
+#ScriptVersion[3]
+#Title["Moonlight Ray Recreation"]
+#Text["Code by CHY[r]A recreation of Moonlight Ray, Rumia's Stage 1 Midboss Spell!"]
+
+#include "script/default_system/Default_ShotConst.txt"
+
+let objBoss;
+let objScene = GetEnemyBossSceneObjectID();
+
+@Event {
+	alternative(GetEventType())
+    case(EV_REQUEST_LIFE) {
+        SetScriptResult(500);
+    }
+    case(EV_REQUEST_TIMER) {
+        SetScriptResult(30);
+    }
+    case(EV_REQUEST_SPELL_SCORE) {
+        SetScriptResult(1000000);
+    }
+}
+
+@Initialize {
+	objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
+    ObjEnemy_Regist(objBoss);
+    ObjMove_SetDestAtFrame(objBoss, GetStgFrameWidth() / 2, 60, 60);
+
+    ObjEnemyBossScene_StartSpell(objScene);
+
+	TDrawLoop;
+    TFinalize;
+    TMainTask;
+}
+
+@MainLoop {
+	ObjEnemy_SetIntersectionCircleToShot(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 32);
+    ObjEnemy_SetIntersectionCircleToPlayer(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 24);
+
+    yield;
+}
+
+task TDrawLoop {
+    let imgExRumia = GetCurrentScriptDirectory() ~ "ExRumia.png";
+    ObjPrim_SetTexture(objBoss, imgExRumia);
+    ObjSprite2D_SetSourceRect(objBoss, 64, 1, 127, 64);
+    ObjSprite2D_SetDestCenter(objBoss);
+}
+
+task TFinalize {
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+		yield;
+    }
+    if (ObjEnemyBossScene_GetInfo(objScene, INFO_PLAYER_SHOOTDOWN_COUNT) + ObjEnemyBossScene_GetInfo(objScene, INFO_PLAYER_SPELL_COUNT) == 0) {
+        AddScore(ObjEnemyBossScene_GetInfo(objScene, INFO_SPELL_SCORE));
+    }
+    Obj_Delete(objBoss);
+    DeleteShotAll(TYPE_ALL, TYPE_IMMEDIATE);
+    SetAutoDeleteObject(true);
+    CloseScript(GetOwnScriptID());
+}
+
+task TMainTask {
+	wait(60);
+	firePelletRing;
+	fireLaser(1);
+	fireLaser(-1);
+}
+
+task fireLaser(direction) {
+	while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+		let objLaser = CreateStraightLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 270 + 105 * direction, GetStgFrameHeight() * 1.5, 36, 240, DS_BEAM_BLUE, 30);
+		ascent(i in 0..120) {
+			ObjStLaser_SetAngle(objLaser, 270 + 105 * direction + 60/120 * i * direction);
+			yield;
+		}
+		wait(150);
+	}
+}
+
+task firePelletRing {
+	while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+		let angleT = GetAngleToPlayer(objBoss);
+		ascent(i in 0..48) {
+			CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 3, angleT + i * 360/48, DS_BALL_SS_BLUE, 10);
+		}
+		wait(30);
+	}
+}
+
+function wait(frames) {
+	loop(frames) {
+		yield;
+	}
+}
