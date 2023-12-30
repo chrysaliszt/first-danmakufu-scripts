@@ -1,7 +1,7 @@
 #TouhouDanmakufu[Single]
 #ScriptVersion[3]
 #Title["Moonlight Ray Recreation"]
-#Text["Code by CHY[r]A recreation of Moonlight Ray, Rumia's Stage 1 Midboss Spell!"]
+#Text["Code by CHY[r]A recreation of Moonlight Ray, Rumia's Stage 1 Midboss Spell from Touhou 6!"]
 
 #include "script/default_system/Default_ShotConst.txt"
 

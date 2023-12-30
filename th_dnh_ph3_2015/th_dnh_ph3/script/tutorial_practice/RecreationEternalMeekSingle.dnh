@@ -1,7 +1,7 @@
 #TouhouDanmakufu[Single]
 #ScriptVersion[3]
 #Title["Eternal Meek Recreation"]
-#Text["Code by CHY[r]A recreation of Eternal Meek, Sakuya's Stage 6 Midboss Spell!"]
+#Text["Code by CHY[r]A recreation of Eternal Meek, Sakuya's Stage 6 Midboss Spell from Touhou 6!"]
 
 #include "script/default_system/Default_ShotConst.txt"
 
