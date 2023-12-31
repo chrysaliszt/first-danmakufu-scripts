@@ -110,8 +110,8 @@ task renderBG {
 
     ObjSprite2D_SetSourceRect(objBG, 0, 0, 384, 448);
     ObjSprite2D_SetDestCenter(objBG);
-    ObjRender_SetPosition(objBG, GetCenterX() + 32, GetCenterY() + 16, 0);
-    Obj_SetRenderPriorityI(objBG, 0);
+    ObjRender_SetPosition(objBG, GetCenterX(), GetCenterY(), 0);
+    Obj_SetRenderPriorityI(objBG, 20);
 }
 
 function GetCenterX() {
