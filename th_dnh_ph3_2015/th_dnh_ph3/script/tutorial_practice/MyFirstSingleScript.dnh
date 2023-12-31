@@ -93,7 +93,9 @@ task fireB {
         let angleT = GetAngleToPlayer(objBoss);
         ascent(i in -1..2) {
             ascent(j in 0..6) {
-                CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 4 - j/3, angleT + i*20, DS_RICE_M_SKY, 5);
+                let obj = CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 4 - j/3, angleT + i*20, DS_RICE_M_SKY, 5);
+                ObjRender_SetBlendType(obj, BLEND_ADD_ARGB);
+                ObjRender_SetAlpha(obj, 200);
             }
         }
         wait(120);
