@@ -1,0 +1,30 @@
+#TouhouDanmakufu[Plural]
+#ScriptVersion[3]
+#Title[""]
+#Text[""] 
+
+@Event{
+}
+
+@Initialize{
+    TPlural;
+}
+
+@MainLoop{
+    yield;
+}
+
+task TPlural{
+	let dir = GetCurrentScriptDirectory();
+    let obj = ObjEnemyBossScene_Create();
+    ObjEnemyBossScene_Add(obj, 0, dir ~ "./NonSpell1.dnh");
+    ObjEnemyBossScene_Add(obj, 0, dir ~ "./Spell1.dnh");
+    ObjEnemyBossScene_Add(obj, 1, dir ~ "./nonSpell2.dnh");
+    ObjEnemyBossScene_Add(obj, 1, dir ~ "./Spell2.dnh");
+    ObjEnemyBossScene_LoadInThread(obj);
+    ObjEnemyBossScene_Regist(obj);
+    while(!Obj_IsDeleted(obj)){
+        yield;
+    }
+    CloseScript(GetOwnScriptID());
+}
