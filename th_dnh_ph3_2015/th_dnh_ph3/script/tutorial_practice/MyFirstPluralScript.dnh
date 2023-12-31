@@ -1,0 +1,30 @@
+#TouhouDanmakufu[Plural]
+#ScriptVersion[3]
+#Title["My First Plural Script!"]
+#Text["Code by CHY[r]A plural script featuring some patterns I've made."] 
+
+@Event{
+}
+
+@Initialize{
+    TPlural;
+}
+
+@MainLoop{
+    yield;
+}
+
+task TPlural{
+	let dir = GetCurrentScriptDirectory();
+    let obj = ObjEnemyBossScene_Create();
+    ObjEnemyBossScene_Add(obj, 0, dir ~ "./MyFirstSingleScript.dnh");
+    ObjEnemyBossScene_Add(obj, 0, dir ~ "./RecreationEternalMeekSingle.dnh");
+    ObjEnemyBossScene_Add(obj, 1, dir ~ "./LaserTestSingle.dnh");
+    ObjEnemyBossScene_Add(obj, 1, dir ~ "./RecreationMoonlightRaySingle.dnh");
+    ObjEnemyBossScene_LoadInThread(obj);
+    ObjEnemyBossScene_Regist(obj);
+    while(!Obj_IsDeleted(obj)){
+        yield;
+    }
+    CloseScript(GetOwnScriptID());
+}
