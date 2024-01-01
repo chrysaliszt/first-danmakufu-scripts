@@ -36,6 +36,7 @@ let objScene = GetEnemyBossSceneObjectID();
 
     ObjEnemyBossScene_StartSpell(objScene);
 
+    TRenderBackground;
 	TDrawLoop;
     TFinalize;
     TMainTask;
@@ -49,6 +50,20 @@ let objScene = GetEnemyBossSceneObjectID();
     ObjEnemy_SetIntersectionCircleToPlayer(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 24);
 
     yield;
+}
+
+task TRenderBackground {
+//----------------------------------------------------
+// CHANGE 2D BACKGROUND SPRITE AND ANIMATION HERE
+//----------------------------------------------------
+    let objBG = ObjPrim_Create(OBJ_SPRITE_2D);
+    let imgpath = GetCurrentScriptDirectory() ~ "./spellBackground.jpg";
+    ObjPrim_SetTexture(objBG, imgpath);
+
+    ObjSprite2D_SetSourceRect(objBG, 0, 0, 384, 448);
+    ObjSprite2D_SetDestCenter(objBG);
+    ObjRender_SetPosition(objBG, GetCenterX(), GetCenterY(), 0);
+    Obj_SetRenderPriorityI(objBG, 20);
 }
 
 task TDrawLoop {
