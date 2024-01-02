@@ -43,10 +43,37 @@ let objScene = GetEnemyBossSceneObjectID();
 }
 
 task TDrawLoop {
-    let imgExRumia = GetCurrentScriptDirectory() ~ "ExRumia.png";
-    ObjPrim_SetTexture(objBoss, imgExRumia);
-    ObjSprite2D_SetSourceRect(objBoss, 64, 1, 127, 64);
+    let imgPath = GetCurrentScriptDirectory() ~ "./u2l13spritesheet.png";
+    let aniFrame = 0;
+    let motion = 0;
+
+    let previousPos = [ObjMove_GetX(objBoss), ObjMove_GetY(objBoss)];
+    let currentPos = [ObjMove_GetX(objBoss), ObjMove_GetY(objBoss)];
+
+    ObjPrim_SetTexture(objBoss, imgPath);
+    ObjRender_SetScaleXYZ(objBoss, 1, 1, 1);
+    ObjSprite2D_SetSourceRect(objBoss, 0, 0, 64, 64);
     ObjSprite2D_SetDestCenter(objBoss);
+
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+        // Update previous and current position.
+        previousPos = currentPos;
+        currentPos = [ObjMove_GetX(objBoss), ObjMove_GetY(objBoss)];
+
+        if (currentPos[0] - previousPos[0] + currentPos[1] - previousPos[1] == 0) {
+            motion = 0;
+        } else {
+            motion = 1;
+        }
+
+        ObjSprite2D_SetSourceRect(objBoss, 0 + 64 * floor(aniFrame / 8), 0 + 64 * motion, 64 + 64 * floor(aniFrame / 8), 64 + 64 * motion);
+        aniFrame++;
+        if (aniFrame >= 32) {
+            aniFrame = 0;
+        }
+        yield;
+        
+    }
 }
 
 task TFinalize {
