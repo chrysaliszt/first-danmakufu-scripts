@@ -165,7 +165,7 @@ function CreateTrack() {
 	ObjSound_Load(obj, GetCurrentScriptDirectory() ~ "./GhostScapegoat_Sajiboshi.mp3");
 	ObjSound_SetSoundDivision(obj, SOUND_BGM);
 	ObjSound_SetLoopEnable(obj, true);
-	ObjSound_SetLoopTime(obj, 0.1, 219);
+	ObjSound_SetLoopTime(obj, 110.144, 219.494);
 	return obj;
 }
 
