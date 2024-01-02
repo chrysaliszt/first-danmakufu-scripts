@@ -69,6 +69,7 @@ task TMainTask {
 
 task fireLaser(direction) {
 	while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+        if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0) {return;}
 		let objLaser = CreateStraightLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 270 + 105 * direction, GetStgFrameHeight() * 1.5, 36, 240, DS_BEAM_BLUE, 30);
 		ascent(i in 0..120) {
 			ObjStLaser_SetAngle(objLaser, 270 + 105 * direction + 60/120 * i * direction);
@@ -82,6 +83,7 @@ task firePelletRing {
 	while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
 		let angleT = GetAngleToPlayer(objBoss);
 		ascent(i in 0..48) {
+            if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0) {return;}
 			CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 3, angleT + i * 360/48, DS_BALL_SS_BLUE, 10);
 		}
 		wait(30);

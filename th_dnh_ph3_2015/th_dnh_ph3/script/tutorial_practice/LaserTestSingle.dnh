@@ -110,6 +110,7 @@ task fireA {
 task fireB {
 	while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
 		let angleT = GetAngleToPlayer(objBoss);
+		if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0) {return;}
 		let obj = CreateStraightLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), angleT, GetStgFrameHeight() * 1.5, 20, 80, DS_BEAM_RAINBOW, 55);
 		wait(60);
 		if (GetAngleToPlayer(obj) > angleT) {
@@ -127,6 +128,7 @@ task fireC {
 	while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
 		let angleT = GetAngleToPlayer(objBoss) - 30;
 		ascent(i in 0..2) {
+			if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0) {return;}
 			let objLaser = CreateCurveLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 6, angleT, 60, 18, DS_MISSILE_SKY, 10);
 			ObjCrLaser_SetTipDecrement(objLaser, 0);
 			SnakePattern(objLaser, 2 * (1 - 2*i));
@@ -137,6 +139,7 @@ task fireC {
 }
 
 task slowLooseLaser(angle) {
+	if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0) {return;}
 	let laser = CreateLooseLaserA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 1, angle, 14, 12, DS_SCALE_GREEN, 20);
 	ObjRender_SetBlendType(laser, BLEND_INV_DESTRGB);
 	wait(140);
@@ -145,6 +148,7 @@ task slowLooseLaser(angle) {
 }
 
 task DelayLaser(x, y, ang, l, w, dt, graphic, delay) { 
+	if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0) {return;}
     let objLaser = CreateStraightLaserA1(x, y, ang, l, w, dt, graphic, delay);
     ObjStLaser_SetSource(objLaser, false);
 	let alpha = 0;

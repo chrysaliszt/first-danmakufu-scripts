@@ -70,6 +70,7 @@ task BoWaP(shotsPerRing) {
     let counter = 1;
     while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
         loop(shotsPerRing) {
+            if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0) {return;}
             CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 2, angleT, DS_BALL_SS_WHITE, 5);
             angleT += 360 / shotsPerRing;
         }

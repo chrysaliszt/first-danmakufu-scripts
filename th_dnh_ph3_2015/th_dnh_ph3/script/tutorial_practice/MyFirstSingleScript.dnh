@@ -108,6 +108,7 @@ task fireA {
         let angleT = GetAngleToPlayer(objBoss);
         loop(13) {
             ascent(i in 0..8) {
+				if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0) {return;}
                 CreateShotA2(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 0, angleT, 0.01 * (i+1), 20, DS_BALL_S_RED + i, 5);
             }
             angleT += 360/13;
@@ -121,6 +122,7 @@ task fireB {
         let angleT = GetAngleToPlayer(objBoss);
         ascent(i in -1..2) {
             ascent(j in 0..6) {
+				if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0) {return;}
                 let obj = CreateShotA1(ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 4 - j/3, angleT + i*20, DS_RICE_M_SKY, 5);
                 ObjRender_SetBlendType(obj, BLEND_ADD_ARGB);
                 ObjRender_SetAlpha(obj, 200);
