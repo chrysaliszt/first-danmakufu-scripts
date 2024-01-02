@@ -2,7 +2,6 @@
 #ScriptVersion[3]
 #Title["My First Danmakufu Single Script!"]
 #Text["Code by CHY[r]My First Bullet!"]
-#BGM["./はたらけ東方風（mp3版）/é═é╜éτé»ôîò√òùüimp3ö┼üj/mp3/âSü[âXâgâXâPü[âvâSü[âg.mp3"]
 
 #include "script/default_system/Default_ShotConst.txt"
 
@@ -29,6 +28,7 @@ let objScene = GetEnemyBossSceneObjectID();
 
     ObjEnemyBossScene_StartSpell(objScene);
 
+	ObjSound_Play(CreateTrack());
     renderBG;
     TDrawLoop;
     TFinalize;
@@ -139,6 +139,15 @@ task renderBG {
     ObjSprite2D_SetDestCenter(objBG);
     ObjRender_SetPosition(objBG, GetCenterX(), GetCenterY(), 0);
     Obj_SetRenderPriorityI(objBG, 20);
+}
+
+function CreateTrack() {
+	let obj = ObjSound_Create();
+	ObjSound_Load(obj, GetCurrentScriptDirectory() ~ "./GhostScapegoat_Sajiboshi.mp3");
+	ObjSound_SetSoundDivision(obj, SOUND_BGM);
+	ObjSound_SetLoopEnable(obj, true);
+	ObjSound_SetLoopTime(obj, 0.1, 219);
+	return obj;
 }
 
 function GetCenterX() {
