@@ -26,9 +26,12 @@ let objScene = GetEnemyBossSceneObjectID();
     ObjEnemy_Regist(objBoss);
     ObjMove_SetDestAtFrame(objBoss, GetCenterX(), 60, 60);
 
+    InstallFont(GetCurrentScriptDirectory() ~ "./Revue Regular.ttf");
+
     ObjEnemyBossScene_StartSpell(objScene);
 
 	ObjSound_Play(CreateTrack());
+    TDisplayText;
     TRenderBG;
     TDrawLoop;
     TFinalize;
@@ -40,6 +43,19 @@ let objScene = GetEnemyBossSceneObjectID();
     ObjEnemy_SetIntersectionCircleToPlayer(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 24);
 
     yield;
+}
+
+task TDisplayText {
+    let objText = ObjText_Create();
+    ObjText_SetText(objText, "some test text!");
+    ObjText_SetFontType(objText, "Revue");
+    Obj_SetRenderPriorityI(objText, 25);
+    ObjRender_SetPosition(objText, GetCenterX() - ObjText_GetTotalWidth(objText) / 2, GetCenterY(), 1);
+    ObjText_SetFontColorBottom(objText, 100, 200, 255);
+    ObjText_SetFontColorTop(objText, 200, 50, 150);
+
+    wait(150);
+    Obj_Delete(objText);
 }
 
 task TRenderBG {
@@ -143,16 +159,6 @@ task fireB {
     }   
 }
 
-task renderBG {
-    let objBG = ObjPrim_Create(OBJ_SPRITE_2D);
-    let imgpath = GetCurrentScriptDirectory() ~ "./RaikoSpellBackground.jpg";
-    ObjPrim_SetTexture(objBG, imgpath);
-
-    ObjSprite2D_SetSourceRect(objBG, 0, 0, 384, 448);
-    ObjSprite2D_SetDestCenter(objBG);
-    ObjRender_SetPosition(objBG, GetCenterX(), GetCenterY(), 0);
-    Obj_SetRenderPriorityI(objBG, 20);
-}
 
 function CreateTrack() {
 	let obj = ObjSound_Create();
