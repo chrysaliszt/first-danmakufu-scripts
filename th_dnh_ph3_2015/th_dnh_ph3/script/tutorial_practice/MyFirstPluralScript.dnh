@@ -3,6 +3,7 @@
 #Title["My First Plural Script!"]
 #Text["Code by CHY[r]A plural script featuring some patterns I've made."] 
 #System["./default_system/Custom_System.dnh"]
+#Background["./default_system/Custom_Background.dnh"]
 
 @Event{
 }

@@ -60,7 +60,7 @@ task TDisplayText {
 
 task TRenderBG {
     let objBG = ObjPrim_Create(OBJ_SPRITE_2D);
-    let imgpath = GetCurrentScriptDirectory() ~ "./RaikoSpellBackground.jpg";
+    let imgpath = GetCurrentScriptDirectory() ~ "./default_system/img/RaikoSpellBackground.jpg";
     ObjPrim_SetTexture(objBG, imgpath);
 
     ObjSprite2D_SetSourceRect(objBG, 0, 0, 384, 448);
