@@ -166,6 +166,7 @@ task fire {
 
 		ascent(i in -1..2) {
 			let angle = 90 + (15 * cos(counter * 15)) + (30 * i) + (rand(-15, 15));
+            if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0) {return;}
 			let obj = CreateShotA1(x, y, 1.8, angle, DS_FIRE_RED, 12);
 			ObjRender_SetBlendType(obj, BLEND_ADD_ARGB);
 		}
