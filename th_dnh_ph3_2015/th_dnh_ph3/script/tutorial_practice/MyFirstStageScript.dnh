@@ -1,0 +1,54 @@
+#TouhouDanmakufu[Stage]
+#ScriptVersion[3]
+#Title["My First Stage Script"]
+#Text["Code by CHY[r]A stage script featuring a plural script and some single scripts."]
+#System["./default_system/Custom_System.dnh"]
+#Background["./default_system/Custom_Background.dnh"]
+
+@Initialize {
+    TStage();
+}
+
+@MainLoop {
+    yield;
+}
+
+@Finalize {
+}
+
+task TStage {
+	let dir = GetCurrentScriptDirectory();
+
+	let path1 = dir ~ "RecreationThisSideDown.dnh";
+	let path2 = dir ~ "MyFirstPluralScript.dnh";
+	let path3 = dir ~ "RecreationBorderOfWaveAndParticle.dnh";
+
+	let script2ID = LoadScriptInThread(path2);
+
+	loop (30) {
+		yield;
+	}
+
+	RunSingleScript(path1);
+	RunPluralScript(script2ID);
+	RunSingleScript(path3);
+
+	loop (240) {yield;}
+	CloseStgScene();
+}
+
+function RunSingleScript(scriptPath) {
+	let obj = ObjEnemyBossScene_Create();
+	ObjEnemyBossScene_Add(obj, 0, scriptPath);
+	ObjEnemyBossScene_Regist(obj);
+	while(!Obj_IsDeleted(obj)) {
+        yield;
+    }
+}
+
+function RunPluralScript(scriptID) {
+	StartScript(scriptID);
+	while(!IsCloseScript(scriptID) && GetPlayerState() != STATE_END) {
+		yield;
+	}
+}
