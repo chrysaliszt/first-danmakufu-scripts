@@ -149,7 +149,7 @@ task movement {
 		let bossYMinLimit = height * 0.1;
 
         ObjMove_SetDestAtFrame(objBoss, 
-			rand(max(bossXMinLimit, bossX - width * 0.4), min(bossXMaxLimit, bossX + width * 0.4)), 
+			rand(max(bossXMinLimit, bossX - width * 0.2), min(bossXMaxLimit, bossX + width * 0.2)), 
 			rand(max(bossYMinLimit, bossY - height * 0.15), min(bossYMaxLimit, bossY + height * 0.15)), 
 			60
 		);
