@@ -1,6 +1,6 @@
 #TouhouDanmakufu[Single]
 #ScriptVersion[3]
-#Title[""]
+#Title["Template Single"]
 #Text[""]
 //----------------------------------------------------
 // INCLUDE SHOTSHEET HERE
@@ -11,7 +11,7 @@ let objBoss;
 let objScene = GetEnemyBossSceneObjectID();
 
 //----------------------------------------------------
-// CHANGE BOSS HEALTH, TIME, AND SPELL BONUS HERE
+// CHANGE EVENTS, BOSS HEALTH, TIME, AND SPELL BONUS HERE
 //----------------------------------------------------
 @Event {
 	alternative(GetEventType())
@@ -26,50 +26,51 @@ let objScene = GetEnemyBossSceneObjectID();
     }
 }
 
+//----------------------------------------------------
+// CHANGE INITIALIZATION (BOSS POSITION) HERE
+//----------------------------------------------------
 @Initialize {
 	objBoss = ObjEnemy_Create(OBJ_ENEMY_BOSS);
     ObjEnemy_Regist(objBoss);
-//----------------------------------------------------
-// CHANGE INITIAL BOSS POSITION HERE
-//----------------------------------------------------
+
     ObjMove_SetDestAtFrame(objBoss, GetStgFrameWidth() / 2, 60, 60);
 
     ObjEnemyBossScene_StartSpell(objScene);
 
-    TRenderBackground;
+    // (optional) TRenderBackground;
 	TDrawLoop;
     TFinalize;
     TMainTask;
 }
 
+//----------------------------------------------------
+// CHANGE MAIN LOOP (BOSS HITBOXES) HERE
+//----------------------------------------------------
 @MainLoop {
-//----------------------------------------------------
-// CHANGE BOSS HITBOXES HERE
-//----------------------------------------------------
 	ObjEnemy_SetIntersectionCircleToShot(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 32);
     ObjEnemy_SetIntersectionCircleToPlayer(objBoss, ObjMove_GetX(objBoss), ObjMove_GetY(objBoss), 24);
 
     yield;
 }
 
-task TRenderBackground {
 //----------------------------------------------------
-// CHANGE 2D BACKGROUND SPRITE AND ANIMATION HERE
+// (optional) CHANGE 2D BACKGROUND RENDERING HERE
 //----------------------------------------------------
-    let objBG = ObjPrim_Create(OBJ_SPRITE_2D);
-    let imgpath = GetCurrentScriptDirectory() ~ "./spellBackground.jpg";
-    ObjPrim_SetTexture(objBG, imgpath);
+// task TRenderBackground {
+//     let objBG = ObjPrim_Create(OBJ_SPRITE_2D);
+//     let imgpath = GetCurrentScriptDirectory() ~ "./spellBackground.jpg";
+//     ObjPrim_SetTexture(objBG, imgpath);
 
-    ObjSprite2D_SetSourceRect(objBG, 0, 0, 384, 448);
-    ObjSprite2D_SetDestCenter(objBG);
-    ObjRender_SetPosition(objBG, GetCenterX(), GetCenterY(), 0);
-    Obj_SetRenderPriorityI(objBG, 20);
-}
+//     ObjSprite2D_SetSourceRect(objBG, 0, 0, 384, 448);
+//     ObjSprite2D_SetDestCenter(objBG);
+//     ObjRender_SetPosition(objBG, GetCenterX(), GetCenterY(), 0);
+//     Obj_SetRenderPriorityI(objBG, 20);
+// }
 
-task TDrawLoop {
 //----------------------------------------------------
 // CHANGE BOSS SPRITE AND ANIMATION HERE
 //----------------------------------------------------
+task TDrawLoop {
     let imgPath = GetCurrentScriptDirectory() ~ "./u2l13spritesheet.png";
     ObjPrim_SetTexture(objBoss, imgPath);
     ObjSprite2D_SetSourceRect(objBoss, 64, 1, 127, 64);
@@ -116,10 +117,11 @@ task TFinalize {
     CloseScript(GetOwnScriptID());
 }
 
-task TMainTask {
 //----------------------------------------------------
 // ADD MAIN TASKS HERE
 //----------------------------------------------------
+task TMainTask {
+
 }
 
 function GetCenterX() {
