@@ -30,9 +30,9 @@ let objScene = GetEnemyBossSceneObjectID();
 
     ObjEnemyBossScene_StartSpell(objScene);
 
-	ObjSound_Play(CreateTrack());
+	// ObjSound_Play(CreateTrack());
     TDisplayText;
-    TRenderBG;
+    // TRenderBG;
     TDrawLoop;
     TFinalize;
     TMainTask;

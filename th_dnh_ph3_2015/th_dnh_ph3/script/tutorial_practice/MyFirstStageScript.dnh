@@ -5,6 +5,18 @@
 #System["./default_system/Custom_System.dnh"]
 #Background["./default_system/Custom_Background.dnh"]
 
+let bgm1;
+
+@Event {
+	alternative (GetEventType())
+	case(EV_PAUSE_ENTER) {
+		ObjSound_Stop(bgm1);
+	}
+	case(EV_PAUSE_LEAVE) {
+		ObjSound_Play(bgm1);
+	}
+}
+
 @Initialize {
     TStage();
 }
@@ -25,10 +37,15 @@ task TStage {
 
 	let script2ID = LoadScriptInThread(path2);
 
+	bgm1 = ObjSound_Create();
+	ObjSound_Load(bgm1, dir ~ "GhostScapegoat_Sajiboshi.mp3");
+	CreateStageBGM(bgm1, 1);
+
 	loop (30) {
 		yield;
 	}
 
+	ObjSound_Play(bgm1);
 	RunSingleScript(path1);
 	RunPluralScript(script2ID);
 	RunSingleScript(path3);
@@ -51,4 +68,14 @@ function RunPluralScript(scriptID) {
 	while(!IsCloseScript(scriptID) && GetPlayerState() != STATE_END) {
 		yield;
 	}
+}
+
+function CreateStageBGM(obj, ID){
+	ObjSound_SetSoundDivision(obj, SOUND_BGM);
+	ObjSound_SetRestartEnable(obj, true);
+	ObjSound_SetLoopEnable(obj, true);
+	ObjSound_SetLoopTime(obj, 0, 300);
+	if(ID == 1){ObjSound_SetLoopTime(obj, 110.144, 219.494);}
+	if(ID == 2){ObjSound_SetLoopTime(obj, 32, 192);}
+	return obj;
 }
