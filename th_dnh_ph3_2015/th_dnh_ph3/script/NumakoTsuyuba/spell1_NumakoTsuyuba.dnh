@@ -36,7 +36,7 @@ let objScene = GetEnemyBossSceneObjectID();
 
     ObjEnemyBossScene_StartSpell(objScene);
 
-    TRenderBackground;
+    // TRenderBackground;
 	TDrawLoop;
     TFinalize;
     TMainTask;
@@ -52,19 +52,19 @@ let objScene = GetEnemyBossSceneObjectID();
     yield;
 }
 
-task TRenderBackground {
-//----------------------------------------------------
-// CHANGE 2D BACKGROUND SPRITE AND ANIMATION HERE
-//----------------------------------------------------
-    let objBG = ObjPrim_Create(OBJ_SPRITE_2D);
-    let imgpath = GetCurrentScriptDirectory() ~ "./spellBackground.jpg";
-    ObjPrim_SetTexture(objBG, imgpath);
+// task TRenderBackground {
+// //----------------------------------------------------
+// // CHANGE 2D BACKGROUND SPRITE AND ANIMATION HERE
+// //----------------------------------------------------
+//     let objBG = ObjPrim_Create(OBJ_SPRITE_2D);
+//     let imgpath = GetCurrentScriptDirectory() ~ "./spellBackground.jpg";
+//     ObjPrim_SetTexture(objBG, imgpath);
 
-    ObjSprite2D_SetSourceRect(objBG, 0, 0, 384, 448);
-    ObjSprite2D_SetDestCenter(objBG);
-    ObjRender_SetPosition(objBG, GetCenterX(), GetCenterY(), 0);
-    Obj_SetRenderPriorityI(objBG, 20);
-}
+//     ObjSprite2D_SetSourceRect(objBG, 0, 0, 384, 448);
+//     ObjSprite2D_SetDestCenter(objBG);
+//     ObjRender_SetPosition(objBG, GetCenterX(), GetCenterY(), 0);
+//     Obj_SetRenderPriorityI(objBG, 20);
+// }
 
 task TDrawLoop {
 //----------------------------------------------------
@@ -120,6 +120,36 @@ task TMainTask {
 //----------------------------------------------------
 // ADD MAIN TASKS HERE
 //----------------------------------------------------
+    wait(60);
+    movement(60, 60, 120);
+}
+
+task movement(radius, moveFrames, waitFrames) {
+    let maxX = GetStgFrameWidth() * (0.50 + 0.40);
+    let minX = GetStgFrameWidth() * (0.50 - 0.40);
+    let maxY = GetStgFrameHeight() * (0.25 + 0.10);
+    let minY = GetStgFrameHeight() * (0.25 - 0.10);
+
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+        let currentX = ObjMove_GetX(objBoss);
+        let currentY = ObjMove_GetY(objBoss);
+
+        let angle = GetAngleToPlayer(objBoss);
+        if (angle > 90 || angle < -90) {angle = rand(180 - 45, 180 + 45);}
+        else {angle = rand(-45, 45);}
+
+        let finalX = currentX + radius * cos(angle);
+        let finalY = currentY + radius * sin(angle);
+
+        if (finalX > maxX) {finalX = maxX;} 
+        else if (finalX < minX) {finalX = minX;}
+
+        if (finalY > maxY) {finalY = maxY;}
+        else if (finalY < minY) {finalY = minY;}
+
+        ObjMove_SetDestAtFrame(objBoss, finalX, finalY, moveFrames);
+        wait(waitFrames);
+    }
 }
 
 function GetCenterX() {
