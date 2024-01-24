@@ -122,6 +122,7 @@ task TMainTask {
 //----------------------------------------------------
     wait(60);
     movement(60, 60, 120);
+    fireSeed;
 }
 
 // Boss movement: pick a random direction, and move "radius" pixels in that direction.
@@ -151,6 +152,43 @@ task movement(radius, moveFrames, waitFrames) {
 
         ObjMove_SetDestAtFrame(objBoss, finalX, finalY, moveFrames);
         wait(waitFrames);
+    }
+}
+
+task fireSeed {
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
+        let shotSeed = CreateShotOA1(objBoss, 5, 0, DS_BALL_L_GREEN, 30);
+        ObjMove_SetDestAtSpeed(shotSeed, GetPlayerX(), GetStgFrameHeight(), 5);
+        renderShotSeed(shotSeed);
+        fireFromSeed(shotSeed);
+        wait(240);
+        Obj_Delete(shotSeed);
+    }
+}
+
+task renderShotSeed(shotSeed) {
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0 && Obj_IsDeleted(shotSeed) == false) {
+        ObjRender_SetAngleZ(shotSeed, ObjRender_GetAngleZ(shotSeed) + rand(180, 360));
+        ObjRender_SetScaleXYZ(shotSeed, 1 + rand(-0.03, 0.03), 1 + rand(-0.03, 0.03), 1 + rand(-0.03, 0.03));
+        wait(2);
+    }
+}
+
+task fireFromSeed(shotSeed) {
+    while(ObjMove_GetY(shotSeed) < GetStgFrameHeight() - 10) {
+        yield;
+    } 
+
+    let seedX = ObjMove_GetX(shotSeed);
+    let seedY = ObjMove_GetY(shotSeed);
+    let i = 0;
+
+    while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0 && (i * 20) < GetStgFrameHeight()) {
+        i++;
+        let shotBall = CreateShotA1(seedX, seedY - 20*i, 1, rand(0, 360), DS_BALL_S_A_YELLOW, 30);
+        let shotNeedle = CreateShotA1(seedX + 10*((i/10)^2)*(i%2 * 2 - 1), seedY - 20*i, 1, 180 + 180*(i%2), DS_NEEDLE_GREEN, 30);
+        ObjMove_AddPatternA2(shotBall, 60, NO_CHANGE, NO_CHANGE, 0.05, 0, 3);
+        wait(2);
     }
 }
 
