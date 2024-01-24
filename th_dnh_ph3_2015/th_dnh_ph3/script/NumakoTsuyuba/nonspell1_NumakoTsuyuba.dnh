@@ -187,7 +187,8 @@ task fireFromSeed(shotSeed) {
         i++;
         let shotBall = CreateShotA1(seedX, seedY - 20*i, 1, rand(0, 360), DS_BALL_S_A_YELLOW, 30);
         let shotNeedle = CreateShotA1(seedX + 10*((i/10)^2)*(i%2 * 2 - 1), seedY - 20*i, 1, 180 + 180*(i%2), DS_NEEDLE_GREEN, 30);
-        ObjMove_AddPatternA2(shotBall, 60, NO_CHANGE, NO_CHANGE, 0.05, 0, 3);
+        ObjMove_AddPatternA2(shotBall, 60, NO_CHANGE, NO_CHANGE, 0.03, 0, 3);
+        ObjRender_SetScaleXYZ(shotNeedle, 1.5, 1.5, 1);
         wait(2);
     }
 }
