@@ -16,7 +16,7 @@ let objScene = GetEnemyBossSceneObjectID();
 @Event {
 	alternative(GetEventType())
     case(EV_REQUEST_LIFE) {
-        SetScriptResult(500);
+        SetScriptResult(1500);
     }
     case(EV_REQUEST_TIMER) {
         SetScriptResult(60);
@@ -34,7 +34,7 @@ let objScene = GetEnemyBossSceneObjectID();
 //----------------------------------------------------
     ObjMove_SetDestAtFrame(objBoss, GetStgFrameWidth() / 2, 60, 60);
 
-    ObjEnemyBossScene_StartSpell(objScene);
+    // ObjEnemyBossScene_StartSpell(objScene);
 
     // TRenderBackground;
 	TDrawLoop;
@@ -186,7 +186,7 @@ task fireFromSeed(shotSeed) {
     while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0 && (i * 20) < GetStgFrameHeight()) {
         let shotBall = CreateShotA1(seedX, seedY - 20*i, 1, rand(0, 360), DS_BALL_S_A_YELLOW, 30);
         ascent(j in 0..5) {
-            let shotNeedle = CreateShotA1(seedX + 10*((i/10)^2)*(i%2 * 2 - 1) + 3*j*(i%2 * 2 - 1), seedY - 20*i, 1, 180 + 180*(i%2), DS_NEEDLE_GREEN, 30);
+            let shotNeedle = CreateShotA1(seedX + 10*((i/8)^2)*(i%2 * 2 - 1) + 3*j*(i%2 * 2 - 1), seedY - 20*i, 1, 180 + 180*(i%2), DS_NEEDLE_GREEN, 30);
             ObjRender_SetScaleXYZ(shotNeedle, 1.5 - 0.5/2*j, 1.5 - 0.5/2*j, 1);
         }
         ObjMove_AddPatternA2(shotBall, 60, NO_CHANGE, NO_CHANGE, 0.03, 0, 3);
