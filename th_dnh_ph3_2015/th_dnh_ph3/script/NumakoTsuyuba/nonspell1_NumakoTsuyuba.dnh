@@ -157,12 +157,14 @@ task movement(radius, moveFrames, waitFrames) {
 
 task fireSeed {
     while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0) {
-        let shotSeed = CreateShotOA1(objBoss, 5, 0, DS_BALL_L_GREEN, 30);
-        ObjMove_SetDestAtSpeed(shotSeed, GetPlayerX(), GetStgFrameHeight(), 5);
+        let bossX = ObjMove_GetX(objBoss);
+        let bossY = ObjMove_GetY(objBoss);
+        let angle = atan2(GetStgFrameHeight() - bossY, GetPlayerX() - bossX);
+        let shotSeed = CreateShotA1(bossX, bossY, 5, angle, DS_BALL_L_GREEN, 30);
+
         renderShotSeed(shotSeed);
         fireFromSeed(shotSeed);
         wait(240);
-        Obj_Delete(shotSeed);
     }
 }
 
@@ -184,7 +186,7 @@ task fireFromSeed(shotSeed) {
     let i = 0;
 
     while(ObjEnemy_GetInfo(objBoss, INFO_LIFE) > 0 && (i * 20) < GetStgFrameHeight()) {
-        let shotBall = CreateShotA1(seedX, seedY - 20*i, 1, rand(0, 360), DS_BALL_S_A_YELLOW, 30);
+        let shotBall = CreateShotA1(seedX, seedY - 20*i, 1, rand(0, 360), DS_BALL_S_YELLOW, 30);
         ascent(j in 0..5) {
             let shotNeedle = CreateShotA1(seedX + 10*((i/8)^2)*(i%2 * 2 - 1) + 3*j*(i%2 * 2 - 1), seedY - 20*i, 1, 180 + 180*(i%2), DS_NEEDLE_GREEN, 30);
             ObjRender_SetScaleXYZ(shotNeedle, 1.5 - 0.5/2*j, 1.5 - 0.5/2*j, 1);
